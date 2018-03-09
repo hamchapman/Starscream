@@ -445,7 +445,7 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
     private var certValidated = false
     private var didDisconnect = false
     private var readyToWrite = false
-    private var headerSecKey = ""
+    public var headerSecKey = ""
     private let readyToWriteMutex = NSLock()
     private var canDispatch: Bool {
         readyToWriteMutex.lock()
@@ -1307,8 +1307,8 @@ open class WebSocket : NSObject, StreamDelegate, WebSocketClient, WSStreamDelega
 
 }
 
-private extension String {
-    func sha1Base64() -> String {
+public extension String {
+    public func sha1Base64() -> String {
         let data = self.data(using: String.Encoding.utf8)!
         var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
         data.withUnsafeBytes { _ = CC_SHA1($0, CC_LONG(data.count), &digest) }

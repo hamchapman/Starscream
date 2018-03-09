@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import Starscream
 
 class StarscreamTests: XCTestCase {
     
@@ -19,17 +20,27 @@ class StarscreamTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
+
+    let headerSecKey = "dGhlIHNhbXBsZSBub25jZQ=="
+    let wsConst = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+
+    func ct() -> String {
+        let data = "\(headerSecKey)\(wsConst)".data(using: String.Encoding.utf8)!
+
+        var digest = SHA1()
+        let _ = try! digest.update(withBytes: data.bytes)
+        let result = try! digest.finish()
+
+        return Data(bytes: result).base64EncodedString()
+    }
+
     func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+        let libVersion = "\(headerSecKey)\(wsConst)".sha1Base64()
+        let cryptoSwiftVersion = ct()
+
+        print(libVersion, " --- ", cryptoSwiftVersion)
+
+        XCTAssertEqual(libVersion, cryptoSwiftVersion)
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure() {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
+
 }
